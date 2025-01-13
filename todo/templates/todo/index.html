@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        u {
+            text-decoration-color: #0066cc;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #eee;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            color: #fff;
+            background-color: #0066cc;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #004a99;
+        }
+
+        .completed td {
+            color: green;
+            font-weight: bold;
+        }
+
+        .completed .icon {
+            color: green;
+            margin-right: 8px;
+        }
+
+        .completed .btn {
+            background-color: #4CAF50;
+        }
+
+        .completed .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        {% if request.user.is_authenticated %}
+        <h1>Hello, Welcome {{request.user}}</h1>
+        <a href="{% url 'logout' %}" class="btn">Log Out</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn">Log In</a>
+        {% endif %}
+        <hr>
+    </div>
+
+    <div class="container">
+        <h1><u>TO-DO List</u></h1>
+
+        <table>
+            <tr>
+                <th>Tasks</th>
+                <th>Action</th>
+                <th>Action</th>
+                <th>Action</th>
+            </tr>
+            {% for tasks in task %}
+            <tr class="{% if tasks.is_completed %}completed{% endif %}">
+                <td><span class="icon">{% if tasks.is_completed %}✔{% endif %}</span>{{tasks.title}}</td>
+                <td><a href="{% url 'details' tasks.id %}" class="btn">View</a></td>
+                <td><a href="{% url 'update' tasks.id %}" class="btn">Update</a></td>
+                <td><a href="{% url 'delete' tasks.id %}" class="btn">Delete</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">
+                    <h3>No item in list</h3>
+                    <a href="{% url 'create' %}" class="btn">Add New Item</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'create' %}" class="btn">Create</a>
+    </div>
+</body>
+
+</html>
